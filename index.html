@@ -1,58 +1,67 @@
-#!/bin/bash
-# ------------------------------
-# Boby's Health Calculator Script
-# ------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boby's Health Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      text-align: center;
+      padding: 50px;
+    }
+    h1 { color: #333; }
+    input {
+      margin: 10px;
+      padding: 10px;
+      width: 200px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #45a049; }
+    .result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>💪 Boby's Health Calculator</h1>
+  <p>Enter your details to calculate your BMI:</p>
+  
+  <input id="weight" type="number" placeholder="Weight (kg)">
+  <input id="height" type="number" placeholder="Height (cm)">
+  <input id="age" type="number" placeholder="Age (years)">
+  <br>
+  <button onclick="calculate()">Calculate</button>
+  
+  <div class="result" id="result"></div>
+  
+  <script>
+    function calculate() {
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value) / 100;
+      const age = document.getElementById("age").value;
+      const bmi = (weight / (height * height)).toFixed(2);
+      let status = "";
 
-echo "👋 Hi Boby! Welcome to your Health Calculator."
-echo "Please enter the following details:"
+      if (bmi < 18.5) status = "Underweight";
+      else if (bmi < 24.9) status = "Normal weight";
+      else if (bmi < 29.9) status = "Overweight";
+      else status = "Obese";
 
-read -p "Enter your weight (in kg): " weight
-read -p "Enter your height (in cm): " height
-read -p "Enter your age (in years): " age
-
-# Convert height to meters
-height_m=$(echo "$height / 100" | bc -l)
-
-# Calculate BMI (Body Mass Index)
-bmi=$(echo "scale=2; $weight / ($height_m * $height_m)" | bc -l)
-
-echo ""
-echo "📊 Calculating your health report..."
-sleep 1
-echo ""
-echo "Your BMI is: $bmi"
-
-# Health status based on BMI
-if (( $(echo "$bmi < 18.5" | bc -l) )); then
-  status="Underweight"
-elif (( $(echo "$bmi >= 18.5 && $bmi < 24.9" | bc -l) )); then
-  status="Normal weight"
-elif (( $(echo "$bmi >= 25 && $bmi < 29.9" | bc -l) )); then
-  status="Overweight"
-else
-  status="Obese"
-fi
-
-# Display report
-echo "Your Health Status: $status"
-
-# Bonus: Suggestion based on result
-echo ""
-case $status in
-  "Underweight")
-    echo "💡 Suggestion: Try to eat more nutritious food and exercise moderately."
-    ;;
-  "Normal weight")
-    echo "✅ Suggestion: Great! Maintain your healthy lifestyle."
-    ;;
-  "Overweight")
-    echo "⚠️ Suggestion: Include regular workouts and track your diet."
-    ;;
-  "Obese")
-    echo "🚨 Suggestion: Consult a health professional for personalized advice."
-    ;;
-esac
-
-echo ""
-echo "🧠 Age considered: $age years"
-echo "Thank you for using Boby's Health Calculator! 💪"
+      document.getElementById("result").innerHTML = `
+        <p>Your BMI is: ${bmi}</p>
+        <p>Status: ${status}</p>
+        <p>Age considered: ${age} years</p>
+      `;
+    }
+  </script>
+</body>
+</html>
