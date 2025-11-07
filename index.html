@@ -1,49 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boby’s Project</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #74ABE2, #5563DE);
-      color: white;
-      text-align: center;
-      padding: 80px;
-    }
-    h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-    }
-    h2 {
-      font-weight: 300;
-      margin-bottom: 40px;
-    }
-    .card {
-      background-color: rgba(255, 255, 255, 0.15);
-      padding: 30px;
-      border-radius: 15px;
-      display: inline-block;
-      text-align: left;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      max-width: 500px;
-    }
-    .card p {
-      margin: 10px 0;
-      line-height: 1.5;
-    }
-    footer {
-      margin-top: 50px;
-      font-size: 0.9em;
-      opacity: 0.8;
-    }
-  </style>
-</head>
-<body>
-  <h1>👋 Hi, I'm Boby!</h1>
-  <h2>Welcome to My GitHub Project</h2>
+#!/bin/bash
+# ------------------------------
+# Boby's Health Calculator Script
+# ------------------------------
 
-  <div class="card">
+echo "👋 Hi Boby! Welcome to your Health Calculator."
+echo "Please enter the following details:"
 
+read -p "Enter your weight (in kg): " weight
+read -p "Enter your height (in cm): " height
+read -p "Enter your age (in years): " age
 
+# Convert height to meters
+height_m=$(echo "$height / 100" | bc -l)
+
+# Calculate BMI (Body Mass Index)
+bmi=$(echo "scale=2; $weight / ($height_m * $height_m)" | bc -l)
+
+echo ""
+echo "📊 Calculating your health report..."
+sleep 1
+echo ""
+echo "Your BMI is: $bmi"
+
+# Health status based on BMI
+if (( $(echo "$bmi < 18.5" | bc -l) )); then
+  status="Underweight"
+elif (( $(echo "$bmi >= 18.5 && $bmi < 24.9" | bc -l) )); then
+  status="Normal weight"
+elif (( $(echo "$bmi >= 25 && $bmi < 29.9" | bc -l) )); then
+  status="Overweight"
+else
+  status="Obese"
+fi
+
+# Display report
+echo "Your Health Status: $status"
+
+# Bonus: Suggestion based on result
+echo ""
+case $status in
+  "Underweight")
+    echo "💡 Suggestion: Try to eat more nutritious food and exercise moderately."
+    ;;
+  "Normal weight")
+    echo "✅ Suggestion: Great! Maintain your healthy lifestyle."
+    ;;
+  "Overweight")
+    echo "⚠️ Suggestion: Include regular workouts and track your diet."
+    ;;
+  "Obese")
+    echo "🚨 Suggestion: Consult a health professional for personalized advice."
+    ;;
+esac
+
+echo ""
+echo "🧠 Age considered: $age years"
+echo "Thank you for using Boby's Health Calculator! 💪"
