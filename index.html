@@ -1,66 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boby's Health Calculator</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boby's Health Dashboard</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #fce7f3);
+      color: #333;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #2563eb;
+      color: white;
+      padding: 20px;
       text-align: center;
-      padding: 50px;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
-    h1 { color: #333; }
+
+    .container {
+      margin-top: 30px;
+      background-color: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+
     input {
-      margin: 10px;
+      width: 90%;
       padding: 10px;
-      width: 200px;
-      border-radius: 8px;
+      margin: 8px 0;
       border: 1px solid #ccc;
+      border-radius: 8px;
     }
+
     button {
       padding: 10px 20px;
-      background-color: #4caf50;
-      color: white;
       border: none;
       border-radius: 8px;
+      margin: 10px;
       cursor: pointer;
+      font-weight: bold;
     }
-    button:hover { background-color: #45a049; }
-    .result { margin-top: 20px; font-weight: bold; }
+
+    .btn-primary {
+      background-color: #2563eb;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+
+    .btn-secondary {
+      background-color: #f87171;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #ef4444;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    footer {
+      margin-top: auto;
+      background: #f3f4f6;
+      padding: 15px;
+      width: 100%;
+      text-align: center;
+      color: #555;
+    }
   </style>
 </head>
 <body>
-  <h1>💪 Boby's Health Calculator</h1>
-  <p>Enter your details to calculate your BMI:</p>
-  
-  <input id="weight" type="number" placeholder="Weight (kg)">
-  <input id="height" type="number" placeholder="Height (cm)">
-  <input id="age" type="number" placeholder="Age (years)">
-  <br>
-  <button onclick="calculate()">Calculate</button>
-  
-  <div class="result" id="result"></div>
-  
+  <header>
+    <h1>💪 Boby's Health Dashboard</h1>
+    <p>Track your BMI and health status easily!</p>
+  </header>
+
+  <div class="container">
+    <h2>Enter Your Details</h2>
+    <input id="weight" type="number" placeholder="Weight (kg)" />
+    <input id="height" type="number" placeholder="Height (cm)" />
+    <input id="age" type="number" placeholder="Age (years)" />
+
+    <div>
+      <button class="btn-primary" onclick="calculateBMI()">Calculate</button>
+      <button class="btn-secondary" onclick="resetForm()">Reset</button>
+    </div>
+
+    <div id="result"></div>
+
+    <h3>📊 Health Records</h3>
+    <table id="recordsTable">
+      <thead>
+        <tr>
+          <th>Age</th>
+          <th>Weight (kg)</th>
+          <th>Height (cm)</th>
+          <th>BMI</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <footer>© 2025 Boby's Health Tracker. All Rights Reserved.</footer>
+
   <script>
-    function calculate() {
+    function calculateBMI() {
       const weight = parseFloat(document.getElementById("weight").value);
-      const height = parseFloat(document.getElementById("height").value) / 100;
+      const height = parseFloat(document.getElementById("height").value);
       const age = document.getElementById("age").value;
-      const bmi = (weight / (height * height)).toFixed(2);
+
+      if (!weight || !height || !age) {
+        alert("Please enter all fields!");
+        return;
+      }
+
+      const heightM = height / 100;
+      const bmi = (weight / (heightM * heightM)).toFixed(2);
       let status = "";
 
       if (bmi < 18.5) status = "Underweight";
-      else if (bmi < 24.9) status = "Normal weight";
+      else if (bmi < 24.9) status = "Normal";
       else if (bmi < 29.9) status = "Overweight";
       else status = "Obese";
 
-      document.getElementById("result").innerHTML = `
-        <p>Your BMI is: ${bmi}</p>
-        <p>Status: ${status}</p>
-        <p>Age considered: ${age} years</p>
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = `
+        <h3>Your BMI Result</h3>
+        <p><strong>BMI:</strong> ${bmi}</p>
+        <p><strong>Status:</strong> ${status}</p>
+        <p><strong>Age:</strong> ${age} years</p>
       `;
+
+      // Add to table
+      const table = document.getElementById("recordsTable").querySelector("tbody");
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${age}</td><td>${weight}</td><td>${height}</td><td>${bmi}</td><td>${status}</td>`;
+      table.appendChild(row);
+    }
+
+    function resetForm() {
+      document.getElementById("weight").value = "";
+      document.getElementById("height").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("result").innerHTML = "";
     }
   </script>
 </body>
